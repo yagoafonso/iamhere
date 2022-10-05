@@ -1,4 +1,4 @@
-import React from 'react';
+import React,  { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
 
 import { Participant } from '../../components/Participant';
@@ -6,19 +6,24 @@ import { Participant } from '../../components/Participant';
 import { styles } from './styles';
 
 export function Home() {
-  const participants = ['Yago', 'Afonso', 'Isabella', 'Jonatan', 'Isa', 'Diego', 'Mayk', 'Francisco', 'Guilherme', 'Ana', 'Caroline'];
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantName, setParticipantName] = useState('');
+
 
   function handleParticipantAdd(){
-    if(participants.includes("Yago")){
-      return Alert.alert("Participante existe","Já existe um participante na lista com esse nome.")
-
+    if(participants.includes('participantName')){
+      return Alert.alert('Participante existe','Já existe um participante na lista com esse nome.')
     }
+
+    setParticipants(prevState =>[...prevState, participantName]);
+    setParticipantName('');
   }
    function handleParticipantRemove(name: string){
-    Alert.alert("Remover",`Remover o participante ${name} ?`,[
+    
+    Alert.alert('Remover',`Remover o participante ${name} ?`,[
       {
         text: 'Sim',
-        onPress: () => Alert.alert("Deletado!")
+        onPress: () => setParticipants(prevState => prevState.filter(participant => participant !== name))
       },
       {
         text: 'Não',
@@ -37,8 +42,10 @@ export function Home() {
       <View style={styles.form}>
         <TextInput 
           style={styles.input}
-          placeholder="Nome do participante"
-          placeholderTextColor="#6B6B6B"
+          placeholder='Nome do participante'
+          placeholderTextColor='#6B6B6B'
+          onChangeText={setParticipantName}
+          value={participantName}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
